@@ -1,0 +1,903 @@
+---
+title: "Analysis"
+author: "Vanesa"
+date: "9 de enero de 2019"
+output: pdf_document
+---
+
+## Loading data
+
+I imported the libraries used to join tables (dplyr). I load my original data tables were I had the spatial test scores and the total of features included by each person in each kind of environment separated.
+
+```{r setup, include=FALSE}
+library(dplyr)
+library(lme4)
+
+spatialscores <-read.csv("C:/Users/Vanesa/Desktop/final thesis/spatialscores.csv", sep=";")
+data <-read.csv("C:/Users/Vanesa/Desktop/final thesis/quant.csv", sep=",")
+spatialscores
+
+## I join the tables spatial scores and data by the field "Participant" in the new table full. 
+
+full <- left_join(spatialscores, data, by = "Participant",
+copy=FALSE)
+  
+df_full <- spatialscores %"Participant"%
+  left_join(data)
+
+
+## Once I have the data in the correct way, I start doing my ANOVA tests.I want to check if the kind of environment or the spatial abilities influence the kind of features people include in the sketch maps. 
+
+## For that I need to create new tables with the specific features I'm studying in each case.
+
+streets <- full[full$feature_type == "Street",]
+streets 
+
+
+landmarks <- full[full$feature_type == "Point landmark" | full$feature_type == "Linear landmark" | full$feature_type =="Aereal landmark",]
+
+landmarks_point = full[full$feature_type == "Point landmark",]
+landmarks_linear = full[full$feature_type == "Linear landmark",]
+landmarks_aerial = full[full$feature_type == "Aereal landmark",]
+landmarks = rbind(landmarks_point, landmarks_linear, landmarks_aerial)
+
+administrative_region = full[full$feature_type == "Administrative region",]
+environmental_region = full[full$feature_type == "Environmental region",]
+region <- rbind(administrative_region, environmental_region)
+region
+
+
+
+## I want to check if the age influences the streets people include in sketch maps.
+
+model <- lmer(value ~ environment + ego + survez + cardinal + Age + (1|Participant),
+              data = streets,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + ego + survez + cardinal + (1|Participant) ,
+              data = streets,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the age influences the landmarks people include in sketch maps.
+
+model <- lmer(value ~ environment + ego + survez + cardinal + Age + (1|Participant),
+              data = landmarks,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + ego + survez + cardinal + (1|Participant) ,
+              data = landmarks,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the age influences the regional landmarks people include in sketch maps.
+
+model <- lmer(value ~ environment + ego + survez + cardinal + Age + (1|Participant),
+              data = region,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + ego + survez + cardinal + (1|Participant) ,
+              data = region,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+
+## I want to check if the environment influences the streets people include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = streets,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ survez + ego + cardinal + (1|Participant) ,
+              data = streets,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the survey spatial abilities influences the streets people include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = streets,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + ego + cardinal + (1|Participant) ,
+              data = streets,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the ego spatial abilities influence the streets people include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = streets,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + survez + cardinal + (1|Participant) ,
+              data = streets,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the cardinal spatial abilities influence the streets people include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = streets,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + survez + ego + (1|Participant) ,
+              data = streets,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the environment influences the landmarks people include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = landmarks,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ survez + ego + cardinal + (1|Participant) ,
+              data = landmarks,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the survey spatial abilities influences the landmarks people include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = landmarks,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + ego + cardinal + (1|Participant) ,
+              data = landmarks,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the ego spatial abilities influence the landmarks people include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = landmarks,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + survez + cardinal + (1|Participant) ,
+              data = landmarks,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the cardinal spatial abilities influence the landmarks people include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = landmarks,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + survez + ego + (1|Participant) ,
+              data = landmarks,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+
+## I want to check if the environment influences the regional landmarks people include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = region,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ survez + ego + cardinal + (1|Participant) ,
+              data = region,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the survey spatial abilities influences the regional landmarks people include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = region,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + ego + cardinal + (1|Participant) ,
+              data = region,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the ego spatial abilities influence the regional landmarks people include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = region,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + survez + cardinal + (1|Participant) ,
+              data = region,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the cardinal spatial abilities influence the regional landmarks people include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = region,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + survez + ego + (1|Participant) ,
+              data = region,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+
+
+##Now I want to check if the results show any differences for men and women.
+
+##For that, I create new tables where just men or women are included as well a just one kind of environment.
+
+
+
+##Female
+
+streetsfemale <- full[full$feature_type == "Street" & full$Gender == "Female",]
+streetsfemale
+
+landmarksfemale <- full[(full$feature_type == "Point landmark" | full$feature_type == "Linear landmark" | full$feature_type == "Aereal landmark") & full$Gender == "Female",]
+
+landmarksfemale
+
+regionfemale <- full[(full$feature_type == "Administrative region" | full$feature_type == "Environmental region") & full$Gender == "Female",]
+
+regionfemale
+
+#Male
+
+streetsmale <- full[full$feature_type == "Street" & full$Gender == "Male",]
+streetsmale
+
+landmarksmale <- full[(full$feature_type == "Point landmark" | full$feature_type == "Linear landmark" | full$feature_type == "Aereal landmark") & full$Gender == "Male",]
+
+landmarksmale
+
+
+regionmale <- full[(full$feature_type == "Administrative region" | full$feature_type == "Environmental region") & full$Gender == "Male",]
+                   
+regionmale
+
+
+
+## I want to check if the environment influences the streets male include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = streetsmale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ survez + ego + cardinal + (1|Participant) ,
+              data = streetsmale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the survey spatial abilities influences the streets male include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = streetsmale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + ego + cardinal + (1|Participant) ,
+              data = streetsmale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the ego spatial abilities influence the streets male include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = streetsmale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + survez + cardinal + (1|Participant) ,
+              data = streetsmale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the cardinal spatial abilities influence the streets male include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = streetsmale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + survez + ego + (1|Participant) ,
+              data = streetsmale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the environment influences the landmarks male include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = landmarksmale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ survez + ego + cardinal + (1|Participant) ,
+              data = landmarksmale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the survey spatial abilities influences the landmarks male include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = landmarksmale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + ego + cardinal + (1|Participant) ,
+              data = landmarksmale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the ego spatial abilities influence the landmarks male include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = landmarksmale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + survez + cardinal + (1|Participant) ,
+              data = landmarksmale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the cardinal spatial abilities influence the landmarks male include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = landmarksmale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + survez + ego + (1|Participant) ,
+              data = landmarksmale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+
+## I want to check if the environment influences the regional landmarks male include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = regionmale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ survez + ego + cardinal + (1|Participant) ,
+              data = regionmale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the survey spatial abilities influences the regional landmarks male include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = regionmale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + ego + cardinal + (1|Participant) ,
+              data = regionmale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the ego spatial abilities influence the regional landmarks male include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = regionmale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + survez + cardinal + (1|Participant) ,
+              data = regionmale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the cardinal spatial abilities influence the regional landmarks male include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = regionmale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + survez + ego + (1|Participant) ,
+              data = regionmale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+
+
+##Female
+
+streetsfemale <- full[full$feature_type == "Street" & full$Gender == "Female",]
+streetsfemale
+
+landmarksfemale <- full[(full$feature_type == "Point landmark" | full$feature_type == "Linear landmark" | full$feature_type == "Aereal landmark") & full$Gender == "Female",]
+
+landmarksfemale
+
+regionfemale <- full[(full$feature_type == "Administrative region" | full$feature_type == "Environmental region") & full$Gender == "Female",]
+
+regionfemale
+
+#Male
+
+streetsmale <- full[full$feature_type == "Street" & full$Gender == "Male",]
+streetsmale
+
+landmarksmale <- full[(full$feature_type == "Point landmark" | full$feature_type == "Linear landmark" | full$feature_type == "Aereal landmark") & full$Gender == "Male",]
+
+landmarksmale
+
+
+regionmale <- full[(full$feature_type == "Administrative region" | full$feature_type == "Environmental region") & full$Gender == "Male",]
+                   
+regionmale
+
+
+
+##Male
+
+## I want to check if the environment influences the streets male include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = streetsmale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ survez + ego + cardinal + (1|Participant) ,
+              data = streetsmale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the survey spatial abilities influences the streets male include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = streetsmale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + ego + cardinal + (1|Participant) ,
+              data = streetsmale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the ego spatial abilities influence the streets male include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = streetsmale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + survez + cardinal + (1|Participant) ,
+              data = streetsmale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the cardinal spatial abilities influence the streets male include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = streetsmale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + survez + ego + (1|Participant) ,
+              data = streetsmale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the environment influences the landmarks male include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = landmarksmale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ survez + ego + cardinal + (1|Participant) ,
+              data = landmarksmale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the survey spatial abilities influences the landmarks male include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = landmarksmale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + ego + cardinal + (1|Participant) ,
+              data = landmarksmale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the ego spatial abilities influence the landmarks male include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = landmarksmale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + survez + cardinal + (1|Participant) ,
+              data = landmarksmale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the cardinal spatial abilities influence the landmarks male include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = landmarksmale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + survez + ego + (1|Participant) ,
+              data = landmarksmale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+
+## I want to check if the environment influences the regional landmarks male include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = regionmale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ survez + ego + cardinal + (1|Participant) ,
+              data = regionmale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the survey spatial abilities influences the regional landmarks male include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = regionmale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + ego + cardinal + (1|Participant) ,
+              data = regionmale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the ego spatial abilities influence the regional landmarks male include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = regionmale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + survez + cardinal + (1|Participant) ,
+              data = regionmale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the cardinal spatial abilities influence the regional landmarks male include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = regionmale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + survez + ego + (1|Participant) ,
+              data = regionmale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+
+##Female
+
+
+## I want to check if the environment influences the streets female include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = streetsfemale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ survez + ego + cardinal + (1|Participant),
+              data = streetsfemale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the survey spatial abilities influences the streets female include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = streetsfemale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + ego + cardinal + (1|Participant) ,
+              data = streetsfemale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the ego spatial abilities influence the streets female include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = streetsfemale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + survez + cardinal + (1|Participant) ,
+              data = streetsfemale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the cardinal spatial abilities influence the streets female include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = streetsfemale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + survez + ego + (1|Participant) ,
+              data = streetsfemale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the environment influences the landmarks female include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = landmarksfemale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ survez + ego + cardinal + (1|Participant) ,
+              data = landmarksfemale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the survey spatial abilities influences the landmarks female include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = landmarksfemale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + ego + cardinal + (1|Participant) ,
+              data = landmarksfemale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the ego spatial abilities influence the landmarks female include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = landmarksfemale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + survez + cardinal + (1|Participant) ,
+              data = landmarksfemale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the cardinal spatial abilities influence the landmarks female include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = landmarksfemale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + survez + ego + (1|Participant) ,
+              data = landmarksfemale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+
+## I want to check if the environment influences the regional landmarks female include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = regionfemale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ survez + ego + cardinal + (1|Participant) ,
+              data = regionfemale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the survey spatial abilities influences the regional landmarks female include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = regionfemale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + ego + cardinal + (1|Participant) ,
+              data = regionfemale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the ego spatial abilities influence the regional landmarks female include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = regionfemale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + survez + cardinal + (1|Participant) ,
+              data = regionfemale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+## I want to check if the cardinal spatial abilities influence the regional landmarks female include in sketch maps.
+
+model <- lmer(value ~ environment + survez + ego + cardinal + (1|Participant),
+              data = regionfemale,
+              REML = FALSE)
+summary(model)
+
+model_null <- lmer(value ~ environment + survez + ego + (1|Participant) ,
+              data = regionfemale,
+              REML = FALSE)
+summary(model_null)
+
+anova(model_null,model)
+
+
+
+
+
+
+
+
+
+
+```
