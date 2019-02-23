@@ -32,4 +32,15 @@ datas %>% filter (Features %in% selection) %>% group_by(environment) %>%
     sd = sd(value)
   )
 
+#Create boxplot
+library(ggplot2)
+boxplot <- ggplot(datas, aes(x=Features, y=value, group=Features)) + 
+  geom_boxplot(aes(fill=Features))
+
+boxplot
+
+boxplot + facet_grid(. ~ environment) +
+  ggtitle("Features included in each route") +
+  theme(plot.title = element_text(hjust = 0.5)) + theme(axis.text.x=element_blank(), axis.ticks.x=element_blank())
+
 
