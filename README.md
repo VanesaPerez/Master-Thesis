@@ -1,0 +1,2 @@
+# Master-Thesis
+Scripts and data for my master thesis: ANALYSIS OF THE TYPES AND RELATIONS OF FEATURES THAT PEOPLE INCLUDE IN ROUTE SKETCH MAPS
